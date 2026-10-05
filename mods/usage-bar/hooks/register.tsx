@@ -77,9 +77,10 @@ export const register: Register = on => {
     if (ws.length === 0) return next(e)
     const t = Math.max(await read($, now), await $.clock.now())
 
-    const { Box, Text } = $.ui.resolve(e)
+    const { Box, Button, Text } = $.ui.resolve(e)
     return (
-      <Box flexDirection="row" flexWrap="wrap">
+      <Box flexDirection="row" justifyContent="space-between" alignItems="center">
+        <Box flexDirection="row" flexWrap="wrap" flexGrow={1}>
         {ordered(ws).map((w, i) => {
           const reset = until(w.resetsAt, t)
           return (
@@ -91,6 +92,17 @@ export const register: Register = on => {
             </Box>
           )
         })}
+        </Box>
+        <Button
+          key="close"
+          label="✕"
+          plain
+          dimColor
+          onPress={async () => {
+            await update($, isHidden, () => true)
+            $.ui.toast('Usage bar hidden. Type /usage-bar show to bring it back.')
+          }}
+        />
       </Box>
     )
   })

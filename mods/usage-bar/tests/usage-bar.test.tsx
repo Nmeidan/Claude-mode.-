@@ -84,3 +84,24 @@ test('follows new readings from session.measure', async ($, on) => {
   expect(text).toContain('resets in 30m')
   await ui.unmount()
 })
+
+test('the X hides the bar until /usage-bar show', async ($, on) => {
+  mock.clock(on, { now: NOW })
+  mock.store(on)
+  engineBand(on)
+  on('session.start', (_$, e) => ({ cwd: e.cwd }))
+  on('session.usage', () => ({ value: usage(LIMITS) }) as never)
+  on('command.register', () => ({ value: {} }) as never)
+  on('ui.toast', () => ({ value: undefined }) as never)
+  await $.session.start({ cwd: '/' } as never)
+
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ plugin: 'usage-bar', surface, ...BAND } as never)
+    expect(await ui.find({ key: 'close' })).toBeDefined()
+    await ui.press({ key: 'close' })
+    expect(await ui.find({ type: 'Box', key: 'five_hour' })).toBeUndefined()
+    await $.command.run({ command: 'usage-bar', args: 'show' } as never)
+    expect(await ui.find({ type: 'Box', key: 'five_hour' })).toBeDefined()
+    await ui.unmount()
+  }
+})
