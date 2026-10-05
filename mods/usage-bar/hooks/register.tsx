@@ -9,6 +9,7 @@ const now = atom({ plugin: 'usage-bar', key: 'now' } as const, 0)
 const isHidden = atom({ plugin: 'usage-bar', key: 'isHidden' } as const, false)
 
 const MINUTE = 60_000
+const VERSION = '0.3.0'
 
 const copy = (ws: readonly Window[]): Window[] => ws.map(w => ({ ...w }))
 
@@ -61,11 +62,12 @@ export const register: Register = on => {
     const hidden = await read($, isHidden)
     const ws = ordered(await refresh($))
     const t = await $.clock.now()
+    const surfaces = (await $.session.surfaces()).join(', ') || 'none'
     const state = hidden ? 'hidden (`/usage-bar show` to show it)' : 'on'
     return {
       text: ws.length
-        ? `Usage bar is ${state}. ${ws.map(w => summary(w, t)).join(' | ')}`
-        : `Usage bar is ${state}, but Claude Code has no usage reading yet. It arrives with a reply from Claude on a Pro or Max plan; with an API key there is none.`,
+        ? `Usage bar v${VERSION} (on ${surfaces}) is ${state}. ${ws.map(w => summary(w, t)).join(' | ')}`
+        : `Usage bar v${VERSION} (on ${surfaces}) is ${state}, but Claude Code has no usage reading yet. It arrives with a reply from Claude on a Pro or Max plan; with an API key there is none.`,
     }
   })
 
