@@ -1,6 +1,6 @@
 {
   "name": "usage-bar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A band above the prompt showing what's left in the 5-hour and weekly usage windows and when each resets (Pro/Max).",
   "types": "./types/index.d.ts"
 }

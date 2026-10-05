@@ -13,7 +13,7 @@ windows, and how long until each one resets:
 
 - The bar turns yellow once a window is 70% used and red at 90%.
 - Countdowns refresh every minute; percentages update after each reply.
-- `/usage-bar` hides or shows the band.
+- `/usage-bar` shows what it currently reads; `/usage-bar hide` and `/usage-bar show` toggle the band.
 - Works on a **Pro or Max** subscription. With an API key there are no windows, so nothing is shown.
   The figures come from the last API response, so the band appears after Claude's first reply.
 
