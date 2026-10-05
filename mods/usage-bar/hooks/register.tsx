@@ -79,12 +79,11 @@ export const register: Register = on => {
 
     const { Box, Button, Text } = $.ui.resolve(e)
     return (
-      <Box flexDirection="row" justifyContent="space-between" alignItems="center">
-        <Box flexDirection="row" flexWrap="wrap" flexGrow={1}>
-        {ordered(ws).map((w, i) => {
+      <Box flexDirection="row" flexWrap="wrap" alignItems="center">
+        {ordered(ws).map(w => {
           const reset = until(w.resetsAt, t)
           return (
-            <Box key={w.kind} marginRight={i < ws.length - 1 ? 3 : 0}>
+            <Box key={w.kind} marginRight={3}>
               <Text bold>{label(w.kind)} </Text>
               <Text color={color(w)}>{bar(w)}</Text>
               <Text> {left(w)}% left</Text>
@@ -92,12 +91,9 @@ export const register: Register = on => {
             </Box>
           )
         })}
-        </Box>
         <Button
           key="close"
           label="✕"
-          plain
-          dimColor
           onPress={async () => {
             await update($, isHidden, () => true)
             $.ui.toast('Usage bar hidden. Type /usage-bar show to bring it back.')
