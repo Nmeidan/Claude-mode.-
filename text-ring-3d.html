@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Ring 3D</title>
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --fg: #1d1b18;
+    --accent: #c2410c;
+    --muted: #8a8378;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0f12;
+      --fg: #f2efe8;
+      --accent: #fb923c;
+      --muted: #6b6760;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f0f12;
+    --fg: #f2efe8;
+    --accent: #fb923c;
+    --muted: #6b6760;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 0 16px;
+  }
+
+  .stage {
+    --radius: min(34vw, 220px);
+    width: calc(var(--radius) * 2.6);
+    height: calc(var(--radius) * 2.6);
+    perspective: 900px;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Tilt the whole ring so it reads as a 3D path, then wobble the tilt slowly. */
+  .tilt {
+    transform-style: preserve-3d;
+    animation: wobble 9s ease-in-out infinite alternate;
+  }
+
+  .ring {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin 12s linear infinite;
+  }
+
+  .ring span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%) rotateY(var(--a)) translateZ(var(--radius));
+    font-weight: 800;
+    font-size: clamp(18px, 5vw, 34px);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--fg);
+    backface-visibility: visible;
+  }
+  .ring span.hl { color: var(--accent); }
+
+  .hint {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @keyframes spin {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(-360deg); }
+  }
+  @keyframes wobble {
+    from { transform: rotateX(-18deg) rotateZ(-8deg); }
+    to   { transform: rotateX(-28deg) rotateZ(8deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring, .tilt { animation-duration: 60s; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="tilt">
+      <div class="ring" id="ring"></div>
+    </div>
+  </div>
+  <div class="hint">Pure HTML + CSS 3D transforms · no libraries</div>
+
+<script>
+  const text = "CLAUDE ✦ CODE ✦ 3D TEXT RING ✦ ";
+  const ring = document.getElementById("ring");
+  const chars = [...text];
+  const step = 360 / chars.length;
+
+  chars.forEach((ch, i) => {
+    const span = document.createElement("span");
+    span.textContent = ch === " " ? " " : ch;
+    if (ch === "✦") span.className = "hl";
+    span.style.setProperty("--a", `${i * step}deg`);
+    ring.appendChild(span);
+  });
+
+  // Fade letters on the far side of the ring for depth.
+  const spans = [...ring.children];
+  const start = performance.now();
+  const period = 12000; // matches the spin animation
+  function shade(now) {
+    const spin = -((now - start) % period) / period * 360;
+    spans.forEach((s, i) => {
+      const angle = (i * step + spin) * Math.PI / 180;
+      const depth = (Math.cos(angle) + 1) / 2; // 1 = front, 0 = back
+      s.style.opacity = (0.18 + depth * 0.82).toFixed(3);
+    });
+    requestAnimationFrame(shade);
+  }
+  requestAnimationFrame(shade);
+</script>
+</body>
+</html>
