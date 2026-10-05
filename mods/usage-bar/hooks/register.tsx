@@ -62,7 +62,7 @@ export const register: Register = on => {
     const hidden = await read($, isHidden)
     const ws = ordered(await refresh($))
     const t = await $.clock.now()
-    const surfaces = (await $.session.surfaces()).join(', ') || 'none'
+    const surfaces = (await $.session.surfaces().catch(() => [])).join(', ') || 'none'
     const state = hidden ? 'hidden (`/usage-bar show` to show it)' : 'on'
     return {
       text: ws.length

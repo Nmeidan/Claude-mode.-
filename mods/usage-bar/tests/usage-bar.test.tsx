@@ -93,6 +93,7 @@ test('the X hides the bar until /usage-bar show', async ($, on) => {
   on('session.usage', () => ({ value: usage(LIMITS) }) as never)
   on('command.register', () => ({ value: {} }) as never)
   on('ui.toast', () => ({ value: undefined }) as never)
+  on('session.surfaces', () => ({ value: ['desktop'] }) as never)
   await $.session.start({ cwd: '/' } as never)
 
   for (const surface of ['terminal', 'desktop'] as const) {
