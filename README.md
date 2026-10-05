@@ -26,12 +26,18 @@ claude plugin marketplace add nmeidan/claude-mode.-
 claude plugin install usage-bar@claude-mode
 ```
 
-Or from a local clone: `claude plugin marketplace add /path/to/Claude-mode.-`.
+Or from a local clone (works before this branch is merged):
+
+```sh
+git clone -b claude/kind-clarke-c3o3y7 https://github.com/Nmeidan/Claude-mode.- ~/Claude-mode
+claude plugin marketplace add ~/Claude-mode
+claude plugin install usage-bar@claude-mode
+```
 
 ### Try it for one session
 
 ```sh
-claude --plugin-dir /path/to/Claude-mode.-/mods/usage-bar
+claude --plugin-dir ~/Claude-mode/mods/usage-bar
 ```
 
 For the desktop app, add the folder to `CLAUDE_CODE_PLUGIN_DIRS` in the `env` block of
