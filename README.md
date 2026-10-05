@@ -34,6 +34,17 @@ claude plugin marketplace add ~/Claude-mode
 claude plugin install usage-bar@claude-mode
 ```
 
+### Update
+
+```sh
+cd ~/Claude-mode && git pull
+claude plugin marketplace update claude-mode
+claude plugin update usage-bar@claude-mode
+```
+
+Then quit and reopen Claude Code. A `git pull` alone isn't enough: the installed version stays
+recorded until `claude plugin update` moves it.
+
 ### Try it for one session
 
 ```sh
